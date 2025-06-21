@@ -1,21 +1,23 @@
+import io
 import streamlit as st
 from PIL import Image
-import io
+from src.interpreter import interpreter
+from src.preprocess import preprocess
 
 # Initialize session state
 if 'result' not in st.session_state:
     st.session_state['result'] = "Chưa có kết quả."
 
-# Dummy model dictionary
-MODEL_OPTIONS = {
-    "Model A": lambda img: "Lễ hội đền Hùng",
-    "Model B": lambda img: "Lễ hội chùa Hương",
-    "Model C": lambda img: "Lễ hội đâm trâu"
+MODEL_VERSIONS = {
+    "V1": lambda img: "ViaBa",
+    "V2": lambda img: "HungVuong",
+    "V3": lambda img: "HoiLim",
+    "V4": lambda img: "DuaGheNgo",
 }
 
 # Page configuration
 st.set_page_config(
-    page_title="Nhận dạng ảnh lễ hội truyền thống",
+    page_title="Nhận dạng ảnh lễ hội truyền thống tại Việt Nam bằng mô hình CNN",
     layout="wide",
     initial_sidebar_state="auto"
 )
@@ -49,16 +51,16 @@ with col2:
     st.subheader("Chọn mô hình")
     selected_model = st.selectbox(
         "Phiên bản",
-        options=list(MODEL_OPTIONS.keys()),
+        options=list(MODEL_VERSIONS.keys()),
         index=0
     )
 
     
     if st.button("▶ Nhận dạng", key="predict_button"):
-        
         if image is not None:
             try:
-                result = MODEL_OPTIONS[selected_model](image)
+                image = preprocess(image)
+                result = interpreter(MODEL_VERSIONS[selected_model](image))
                 st.session_state['result'] = result
                 st.success("Nhận dạng thành công!")
             except Exception as e:
