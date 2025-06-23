@@ -58,8 +58,8 @@ with col2:
             try:
                 image = preprocess(image)
                 model = model_loader.get_model(selected_model)
-                result, probs = predictor.predict(model, image)
-                st.session_state['result'] = probs
+                result = predictor.predict(model, image)
+                st.session_state['result'] = result
                 st.success("Nhận dạng thành công!")
             except Exception as e:
                 st.error(f"Lỗi khi nhận dạng: {str(e)}")

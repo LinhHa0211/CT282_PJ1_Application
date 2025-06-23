@@ -32,4 +32,4 @@ class Predictor:
     def predict(self, keras_model, X_test):
         probs = keras_model.predict(X_test)
         predicted_class = np.argmax(probs, axis=1)[0]
-        return self.__d[predicted_class], probs
+        return self.__d[predicted_class]
